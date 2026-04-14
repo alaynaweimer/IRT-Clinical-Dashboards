@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Reach — Callye Hansen</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:#0d1b2a;min-height:100vh;display:flex;align-items:center;justify-content:center}
+
+/* PIN SCREEN */
+.pin-screen{width:100%;max-width:380px;padding:40px 24px;text-align:center}
+.pin-logo{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#0a5c48,#1aa382);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Instrument Serif',serif;font-size:24px;color:#fff}
+.pin-title{font-family:'Instrument Serif',serif;font-size:28px;color:#fff;margin-bottom:6px}
+.pin-sub{font-size:13px;color:#64748b;margin-bottom:32px}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:24px}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:#1e2d3d;border:2px solid #334155;transition:all .2s}
+.pin-dot.filled{background:#1aa382;border-color:#1aa382}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto 16px}
+.pin-btn{padding:18px;background:#1e2d3d;border:1px solid #334155;border-radius:12px;font-family:'Sora',sans-serif;font-size:20px;font-weight:500;color:#fff;cursor:pointer;transition:all .15s}
+.pin-btn:hover{background:#253545;border-color:#1aa382}
+.pin-btn:active{transform:scale(.95)}
+.pin-error{color:#e11d48;font-size:13px;margin-top:12px;min-height:20px}
+
+/* DASHBOARD */
+.dashboard{display:none;width:100%;max-width:480px;min-height:100vh;background:#f0f4f8;flex-direction:column}
+.dashboard.visible{display:flex}
+
+.hdr{background:linear-gradient(160deg,#0d1b2a 0%,#1a3a5c 60%,#0a5c48 100%);padding:24px 20px 20px}
+.hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1aa382,#0a5c48);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:18px;color:#fff;flex-shrink:0}
+.hdr-name{font-family:'Instrument Serif',serif;font-size:24px;color:#fff;line-height:1;margin-bottom:4px}
+.hdr-meta{font-size:12px;color:rgba(255,255,255,.5)}
+.hdr-meta span{color:rgba(255,255,255,.8);font-weight:500}
+.live-dot{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.5);align-self:flex-start;padding-top:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:#1aa382;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.search-bar{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.search-bar-dot{width:8px;height:8px;border-radius:50%;background:#1aa382}
+.search-bar-text{font-size:13px;color:rgba(255,255,255,.4)}
+
+.tabs{display:flex;background:#fff;border-bottom:1px solid #e2e8f0}
+.tab{flex:1;padding:14px;text-align:center;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s}
+.tab.active{color:#0a5c48;border-bottom-color:#1aa382}
+
+.phases{display:flex;padding:10px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;overflow-x:auto;scrollbar-width:none;gap:0}
+.phases::-webkit-scrollbar{display:none}
+.phase{display:flex;align-items:center;gap:5px;font-size:10px;color:#94a3b8;white-space:nowrap;padding-right:12px}
+.phase-dot{width:7px;height:7px;border-radius:50%;background:#1aa382}
+.phase-dot.dim{background:#cbd5e1}
+.phase-sep{color:#cbd5e1;font-size:10px;padding-right:12px}
+
+.content{flex:1}
+.view{display:none;padding-bottom:24px}
+.view.active{display:block}
+
+.sec-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;padding:16px 16px 8px;display:flex;justify-content:space-between}
+
+.snap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.snap-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;cursor:default}
+.snap-icon{font-size:18px;margin-bottom:8px}
+.snap-val{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1;margin-bottom:3px}
+.snap-val.teal{color:#0a5c48}
+.snap-val.orange{color:#d97706}
+.snap-lbl{font-size:11px;color:#64748b}
+.snap-sub{font-size:10px;font-weight:600;color:#1aa382;margin-top:3px}
+.snap-soon{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8;margin-top:6px;padding:3px 8px;background:#f1f5f9;border-radius:20px}
+
+.bill-box{margin:12px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden}
+.bill-hdr{padding:14px 16px 0;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8}
+
+.gauge-wrap{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-end}
+.gauge-center{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);text-align:center;width:120px}
+.gauge-hrs{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1}
+.gauge-lbl{font-size:10px;color:#94a3b8;margin-top:2px}
+.gauge-status{font-size:11px;font-weight:600;color:#1aa382;margin-top:3px}
+.gauge-svg-wrap{position:relative;flex-shrink:0}
+
+.tier-markers{display:flex;flex-direction:column;gap:4px;padding-bottom:8px}
+.tier-mark{display:flex;align-items:center;gap:6px;font-size:10px;color:#64748b}
+.tier-line{width:16px;height:2px;border-radius:1px}
+
+.pace-row{display:flex;justify-content:space-between;padding:8px 16px 12px;font-size:11px}
+.pace-left{color:#1aa382;font-weight:600}
+.pace-right{color:#64748b}
+
+.tier-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px}
+.tier-box{border:1px solid #e2e8f0;border-radius:10px;padding:12px 8px;text-align:center}
+.tier-box-val{font-family:'Instrument Serif',serif;font-size:20px;color:#0f172a;line-height:1}
+.tier-box-val.teal{color:#0a5c48}
+.tier-box-lbl{font-size:10px;color:#64748b;margin-top:3px}
+
+.earn-card{margin:8px 16px 0;background:#e8f7f3;border:1px solid #c2eadf;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.earn-left{display:flex;align-items:center;gap:10px}
+.earn-icon{font-size:20px}
+.earn-title{font-size:13px;font-weight:600;color:#0a5c48}
+.earn-sub{font-size:11px;color:#64748b;margin-top:2px}
+
+.details-btn{width:calc(100% - 32px);margin:8px 16px 0;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.detail-panel{display:none;margin:8px 16px 0;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.detail-panel.open{display:block}
+.detail-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:13px}
+.detail-row:last-child{border:none}
+.dl{color:#64748b}
+.dv{font-weight:500;color:#0f172a}
+
+/* Resources */
+.resource-search{margin:12px 16px 0;position:relative}
+.resource-search input{width:100%;padding:12px 16px 12px 40px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;color:#0f172a;outline:none}
+.resource-search input:focus{border-color:#1aa382}
+.resource-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8}
+.resource-group{margin:10px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden}
+.resource-group-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.resource-group-hdr.open{border-bottom:1px solid #f1f5f9}
+.resource-group-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#0f172a}
+.resource-group-arrow{font-size:11px;color:#94a3b8;transition:transform .2s}
+.resource-group-arrow.open{transform:rotate(180deg)}
+.resource-items{display:none}
+.resource-items.open{display:block}
+.resource-item{display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid #f8fafc;font-size:13px;color:#475569;cursor:pointer;transition:background .1s;text-decoration:none}
+.resource-item:last-child{border:none}
+.resource-item:hover{background:#f8fafc;color:#0a5c48}
+.resource-soon{font-size:10px;color:#94a3b8;background:#f1f5f9;padding:2px 7px;border-radius:10px;margin-left:auto}
+
+.loading-wrap{padding:40px 20px;text-align:center}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid #e2e8f0;border-top-color:#1aa382;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:#94a3b8}
+.error-wrap{margin:16px;padding:14px;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;font-size:13px;color:#e11d48}
+</style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+  <div class="pin-logo">CH</div>
+  <div class="pin-title">Callye Hansen</div>
+  <div class="pin-sub">Enter your 4-digit PIN to access your dashboard</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinClear()" style="font-size:13px;color:#64748b">Clear</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinBack()" style="font-size:18px">⌫</button>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="avatar">CH</div>
+      <div style="flex:1">
+        <div class="hdr-name">Callye Hansen</div>
+        <div class="hdr-meta">FairShare Level: <span id="hdrTrack">Clackamas</span> · <span id="hdrQtr">Q2 2026</span></div>
+      </div>
+      <div class="live-dot"><div class="dot"></div><span id="liveStatus">Live</span></div>
+    </div>
+    <div class="search-bar" onclick="alert('AI search — coming in Phase 3!')">
+      <div class="search-bar-dot"></div>
+      <span class="search-bar-text">What do you need help with?</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('dashboard',this)">📊 Dashboard</div>
+    <div class="tab" onclick="switchTab('resources',this)">📁 Resources</div>
+  </div>
+
+  <div class="phases">
+    <div class="phase"><div class="phase-dot"></div>Phase 1 — Live Stats</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div>Phase 2 — Service Mix</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div>Phase 3 — AI Search</div>
+  </div>
+
+  <div class="content">
+    <div class="view active" id="view-dashboard">
+      <div id="loadingWrap" class="loading-wrap">
+        <div class="spinner"></div>
+        <div class="loading-txt">Loading your stats…</div>
+      </div>
+
+      <div id="mainContent" style="display:none">
+        <div class="sec-label">Snapshot <span id="weekLabel"></span></div>
+        <div class="snap-grid">
+          <div class="snap-card">
+            <div class="snap-icon">📅</div>
+            <div class="snap-val teal" id="snapWkly">—</div>
+            <div class="snap-lbl">Weekly Schedule</div>
+            <div class="snap-sub">hrs expected</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">💰</div>
+            <div class="snap-val teal" id="snapPay">—</div>
+            <div class="snap-lbl">Next Paycheck</div>
+            <div class="snap-sub" id="snapPayDays"></div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">📊</div>
+            <div class="snap-val orange">—</div>
+            <div class="snap-lbl">Cancel Rate</div>
+            <div class="snap-soon">Phase 2</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">🎯</div>
+            <div class="snap-val" style="font-size:14px;color:#94a3b8;padding-top:4px">Coming Soon</div>
+            <div class="snap-lbl">Service Mix</div>
+            <div class="snap-soon">Phase 2</div>
+          </div>
+        </div>
+
+        <div class="bill-box">
+          <div class="bill-hdr">Billable Hours</div>
+          <div class="gauge-wrap">
+            <div class="gauge-svg-wrap">
+              <svg width="180" height="100" viewBox="0 0 180 100">
+                <path d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugeFill" d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+                <line id="gaugeNeedle" x1="90" y1="90" x2="90" y2="30" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90,90,90)"/>
+                <circle cx="90" cy="90" r="5" fill="#0f172a"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-hrs" id="gaugeHrs">—</div>
+                <div class="gauge-lbl">billable hours</div>
+                <div class="gauge-status" id="gaugeStatus">—</div>
+              </div>
+            </div>
+            <div class="tier-markers">
+              <div class="tier-mark"><div class="tier-line" style="background:#ef4444"></div><span id="mMin">—</span></div>
+              <div class="tier-mark" style="margin-left:22px;color:#94a3b8">Minimum</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#1aa382"></div><span id="mT1">—</span></div>
+              <div class="tier-mark" style="margin-left:22px;color:#94a3b8">Tier 1</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#0a5c48"></div><span id="mT2">—</span></div>
+            </div>
+          </div>
+          <div class="pace-row">
+            <span class="pace-left" id="paceLeft">—</span>
+            <span class="pace-right" id="paceRight">—</span>
+          </div>
+          <div class="tier-grid">
+            <div class="tier-box"><div class="tier-box-val" id="tMin">—</div><div class="tier-box-lbl">hrs to Minimum</div></div>
+            <div class="tier-box"><div class="tier-box-val teal" id="tT1">—</div><div class="tier-box-lbl">hrs to Tier 1</div></div>
+            <div class="tier-box"><div class="tier-box-val" style="color:#8b5cf6" id="tT2">—</div><div class="tier-box-lbl">hrs to Tier 2</div></div>
+          </div>
+        </div>
+
+        <div class="earn-card" onclick="alert('Earnings calculator — coming soon!')">
+          <div class="earn-left">
+            <div class="earn-icon">💵</div>
+            <div>
+              <div class="earn-title">Earnings Calculator</div>
+              <div class="earn-sub">How many hours do I need to earn my goal?</div>
+            </div>
+          </div>
+          <span style="color:#1aa382;font-size:16px">→</span>
+        </div>
+
+        <button class="details-btn" id="detBtn" onclick="toggleDetails()">📋 See full breakdown ▾</button>
+        <div class="detail-panel" id="detPanel">
+          <div class="detail-row"><span class="dl">QCHE Target (100%)</span><span class="dv" id="dQche">—</span></div>
+          <div class="detail-row"><span class="dl">QCompleted (w/ credits)</span><span class="dv" id="dComp">—</span></div>
+          <div class="detail-row"><span class="dl">Tier Status</span><span class="dv" id="dTier">—</span></div>
+          <div class="detail-row"><span class="dl">Estimated Bonus</span><span class="dv" id="dBonus">—</span></div>
+          <div class="detail-row"><span class="dl">Weeks Left</span><span class="dv" id="dWeeks">—</span></div>
+          <div class="detail-row"><span class="dl">Last Updated</span><span class="dv" id="dSync">—</span></div>
+        </div>
+      </div>
+      <div id="errorWrap" class="error-wrap" style="display:none"></div>
+    </div>
+
+    <div class="view" id="view-resources">
+      <div class="resource-search">
+        <span class="resource-search-icon">🔍</span>
+        <input type="text" placeholder="Search resources…" oninput="filterResources(this.value)">
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">📋 HR &amp; Benefits</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Employee Handbook">→ Employee Handbook <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Benefits Overview">→ Benefits Overview <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="PTO Policy">→ PTO Policy <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="FMLA">→ FMLA Information <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">💚 FairShare Initiative</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="https://www.notion.so/inreach/The-FairShare-Initiative-740f3c341c62422e96aaaf6771e9735f" target="_blank" data-name="FairShare Overview">→ FairShare Overview</a>
+          <a class="resource-item" href="#" data-name="Pay Structure">→ Pay Structure Guide <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Bonus Calculator">→ Bonus Calculator <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">🩺 Clinical Processes</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Clinical Guidelines">→ Clinical Guidelines <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Re-eval">→ Re-eval Process <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="TX Plan">→ TX Plan Updates <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">📅 Scheduling</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="My Schedule">→ My Scheduling Link <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="PracticeQ">→ PracticeQ <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Time Off">→ Request Time Off <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">💳 Billing &amp; Docs</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Billing">→ Billing Guidelines <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Documentation">→ Documentation Templates <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHEET_ID  = "1lvFHQlFl-8amepEhOELDNvXTB6TcEJ7lvvfV8vyDTk4";
+var SHEET_TAB = "SUMMARY";
+var MY_NAME   = "Callye Hansen";
+var MY_PIN    = "7276";
+
+// ── PIN ──────────────────────────────────────────────────
+var pinEntered = "";
+function pinPress(d) {
+  if (pinEntered.length >= 4) return;
+  pinEntered += d;
+  document.getElementById('d'+(pinEntered.length-1)).classList.add('filled');
+  if (pinEntered.length === 4) setTimeout(checkPin, 200);
+}
+function pinBack() {
+  if (!pinEntered.length) return;
+  pinEntered = pinEntered.slice(0,-1);
+  document.getElementById('d'+pinEntered.length).classList.remove('filled');
+}
+function pinClear() {
+  pinEntered = "";
+  for(var i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
+  document.getElementById('pinError').textContent = "";
+}
+function checkPin() {
+  if (pinEntered === MY_PIN) {
+    document.getElementById('pinScreen').style.display = 'none';
+    document.body.style.background = '#f0f4f8';
+    document.getElementById('dashboard').classList.add('visible');
+    loadData();
+  } else {
+    document.getElementById('pinError').textContent = "Incorrect PIN — try again";
+    pinClear();
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+function toggleDetails() {
+  var open = document.getElementById('detPanel').classList.toggle('open');
+  document.getElementById('detBtn').textContent = open ? '📋 Hide breakdown ▴' : '📋 See full breakdown ▾';
+}
+
+function toggleGroup(hdr) {
+  var items = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.resource-group-arrow');
+  var open  = items.classList.toggle('open');
+  hdr.classList.toggle('open', open);
+  arrow.classList.toggle('open', open);
+}
+
+function filterResources(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.resource-item').forEach(function(item) {
+    var name = (item.getAttribute('data-name') || '').toLowerCase();
+    item.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// ── NEXT PAY DATE (Friday bi-weekly) ─────────────────────
+function nextPayDate() {
+  var anchor = new Date(2026, 3, 24);
+  var today  = new Date();
+  while (anchor <= today) anchor.setDate(anchor.getDate() + 14);
+  return anchor;
+}
+
+// ── GAUGE ─────────────────────────────────────────────────
+function updateGauge(pct) {
+  var maxPct = 120;
+  var angle  = (Math.min(pct, maxPct) / maxPct * 180) - 90;
+  document.getElementById('gaugeNeedle').setAttribute('transform','rotate('+angle+',90,90)');
+  var totalLen = 220;
+  var fillLen  = Math.min(pct/maxPct, 1) * totalLen;
+  var color = pct>=101?'#0a5c48':pct>=97?'#1aa382':pct>=96?'#f59e0b':'#ef4444';
+  var fill = document.getElementById('gaugeFill');
+  fill.setAttribute('stroke-dashoffset', (totalLen-fillLen).toString());
+  fill.setAttribute('stroke', color);
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render(d) {
+  var ch    = parseFloat(d.client_hrs)   || 0;
+  var qche  = parseFloat(d.qche_100)     || 0;
+  var qcomp = parseFloat(d.qcompleted)   || 0;
+  var pct   = qche > 0 ? ch/qche*100 : 0;
+  var wkly  = parseFloat(d.weekly_hrs)   || 0;
+  var weeks = parseFloat(d.weeks_left)   || 0;
+  var bonus = parseFloat(d.total_bonus)  || 0;
+  var tier  = d.tier_status || '';
+  var track = d.track       || 'Clackamas';
+  var qtr   = d.current_quarter || 'Q2';
+  var yr    = d.year        || 2026;
+  var q96   = qche * 0.96;
+  var q97   = qche * 0.97;
+
+  document.getElementById('hdrTrack').textContent = track;
+  document.getElementById('hdrQtr').textContent   = qtr + ' ' + yr;
+  document.getElementById('liveStatus').textContent = 'Live';
+  document.getElementById('snapWkly').textContent  = wkly;
+
+  var pay  = nextPayDate();
+  var days = Math.ceil((pay - new Date()) / 86400000);
+  document.getElementById('snapPay').textContent    = pay.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('snapPayDays').textContent = 'IN '+days+' DAYS';
+  document.getElementById('weekLabel').textContent   = weeks > 0 ? 'Week '+(13-weeks)+' of 13' : '';
+
+  updateGauge(pct);
+  document.getElementById('gaugeHrs').textContent    = ch;
+  document.getElementById('gaugeStatus').textContent =
+    pct>=101?'Tier 2 Bonus! 🏆':pct>=97?'Tier 1 Bonus ✅':pct>=96?'Minimum Met ✅':pct>=80?'On Track ⚡':'Behind 🔴';
+
+  document.getElementById('mMin').textContent = Math.round(q96)+' hrs';
+  document.getElementById('mT1').textContent  = Math.round(q97)+' hrs';
+  document.getElementById('mT2').textContent  = Math.round(qche+1)+' hrs';
+
+  var hrsToMin = Math.max(0, q96-ch).toFixed(1);
+  var hrsToT1  = Math.max(0, q97-ch).toFixed(1);
+  var hrsToT2  = Math.max(0, qche+1-ch).toFixed(1);
+  var wklyNeed = weeks>0 ? (parseFloat(hrsToT1)/weeks).toFixed(1) : 0;
+
+  document.getElementById('paceLeft').textContent  = pct>=97?'On Pace 🎯':pct>=96?'Minimum Met':'Needs Focus';
+  document.getElementById('paceRight').textContent = weeks>0?'Need '+wklyNeed+' hrs/wk for Tier 1':'';
+  document.getElementById('tMin').textContent = hrsToMin;
+  document.getElementById('tT1').textContent  = hrsToT1;
+  document.getElementById('tT2').textContent  = hrsToT2;
+
+  document.getElementById('dQche').textContent  = qche+' hrs';
+  document.getElementById('dComp').textContent  = qcomp+' hrs';
+  document.getElementById('dTier').textContent  = tier||'—';
+  document.getElementById('dBonus').textContent = bonus>0?'$'+bonus.toLocaleString():'None yet';
+  document.getElementById('dWeeks').textContent = weeks+' weeks';
+  document.getElementById('dSync').textContent  = d.last_updated||'—';
+
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('errorWrap').style.display   = 'block';
+  document.getElementById('errorWrap').textContent     = '⚠️ '+msg;
+}
+
+// ── LOAD FROM GOOGLE SHEET DIRECTLY ──────────────────────
+function loadData() {
+  var url = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet='+encodeURIComponent(SHEET_TAB);
+
+  fetch(url)
+    .then(function(r){ return r.text(); })
+    .then(function(text) {
+      // Google wraps response in google.visualization.Query.setResponse(...)
+      var match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+      if (!match) { showError('Could not parse sheet data'); return; }
+
+      var json  = JSON.parse(match[1]);
+      var table = json.table;
+      if (!table || !table.rows) { showError('No data in SUMMARY tab'); return; }
+
+      // Find header row — row 1 is title, row 2 is headers (index 1 in rows array)
+      // But gviz skips merged title rows, so headers may be in cols labels
+      var headers = table.cols.map(function(c){ return (c.label||'').toLowerCase().trim(); });
+
+      // If headers are empty, try first data row
+      if (!headers[0]) {
+        if (!table.rows[0]) { showError('Empty sheet'); return; }
+        headers = table.rows[0].c.map(function(c){ return c&&c.v ? c.v.toString().toLowerCase().trim() : ''; });
+        table.rows = table.rows.slice(1);
+      }
+
+      function getCol(name) {
+        for(var i=0;i<headers.length;i++){
+          if(headers[i].includes(name)) return i;
+        }
+        return -1;
+      }
+
+      var nameCol   = getCol('name');
+      var discCol   = getCol('disc');
+      var teamCol   = getCol('team');
+      var trackCol  = getCol('track');
+      var qtrCol    = getCol('quarter');
+      var yearCol   = getCol('year');
+      var wklyCol   = getCol('weekly');
+      var qcheCol   = getCol('qche_10');
+      var chCol     = getCol('client');
+      var qcompCol  = getCol('qcomplete');
+      var pctCol    = getCol('qche_%');
+      var tierCol   = getCol('tier');
+      var bonusCol  = getCol('bonus');
+      var weeksCol  = getCol('weeks');
+      var updCol    = getCol('last');
+
+      var found = null;
+      for(var i=0;i<table.rows.length;i++){
+        var row = table.rows[i];
+        if(!row || !row.c) continue;
+        var nameVal = row.c[nameCol] && row.c[nameCol].v ? row.c[nameCol].v.toString().trim() : '';
+        if(nameVal === MY_NAME){
+          found = {
+            name:            nameVal,
+            discipline:      row.c[discCol]  && row.c[discCol].v  ? row.c[discCol].v.toString()  : '',
+            team:            row.c[teamCol]  && row.c[teamCol].v  ? row.c[teamCol].v.toString()  : '',
+            track:           row.c[trackCol] && row.c[trackCol].v ? row.c[trackCol].v.toString() : '',
+            current_quarter: row.c[qtrCol]   && row.c[qtrCol].v   ? row.c[qtrCol].v.toString()   : '',
+            year:            row.c[yearCol]  && row.c[yearCol].v  ? row.c[yearCol].v              : 2026,
+            weekly_hrs:      row.c[wklyCol]  && row.c[wklyCol].v  ? row.c[wklyCol].v              : 0,
+            qche_100:        row.c[qcheCol]  && row.c[qcheCol].v  ? row.c[qcheCol].v              : 0,
+            client_hrs:      row.c[chCol]    && row.c[chCol].v    ? row.c[chCol].v                : 0,
+            qcompleted:      row.c[qcompCol] && row.c[qcompCol].v ? row.c[qcompCol].v             : 0,
+            qche_pct:        row.c[pctCol]   && row.c[pctCol].v   ? row.c[pctCol].v               : 0,
+            tier_status:     row.c[tierCol]  && row.c[tierCol].v  ? row.c[tierCol].v.toString()   : '',
+            total_bonus:     row.c[bonusCol] && row.c[bonusCol].v ? row.c[bonusCol].v             : 0,
+            weeks_left:      row.c[weeksCol] && row.c[weeksCol].v ? row.c[weeksCol].v             : 0,
+            last_updated:    row.c[updCol]   && row.c[updCol].v   ? row.c[updCol].v.toString()    : ''
+          };
+          break;
+        }
+      }
+
+      if(found) render(found);
+      else showError('"'+MY_NAME+'" not found in SUMMARY tab. Check name matches exactly.');
+    })
+    .catch(function(err){
+      showError('Could not load sheet — make sure it is shared publicly. '+err.message);
+    });
+}
+</script>
+</body>
+</html>
