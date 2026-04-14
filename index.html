@@ -3,116 +3,666 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>In Reach Therapy — Clinician Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>In Reach — Sarah Curl</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"DM Sans",sans-serif;background:#f0f4f8;min-height:100vh}
-.hdr{background:linear-gradient(150deg,#0a5c48,#1a9e75);padding:32px 20px 28px;text-align:center}
-.hdr h1{font-family:"Fraunces",serif;font-size:26px;font-weight:300;color:#fff;margin-bottom:4px}
-.hdr p{font-size:13px;color:rgba(255,255,255,.7)}
-.content{max-width:560px;margin:0 auto;padding:24px 16px}
-.team-section{margin-bottom:24px}
-.team-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.team-label::after{content:"";flex:1;height:1px;background:#e2e8f0}
-.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.person-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px;text-decoration:none;display:flex;align-items:center;gap:12px;transition:all .15s;position:relative;overflow:hidden}
-.person-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,#1a9e75);opacity:0;transition:opacity .15s}
-.person-card:hover{border-color:#1a9e75;box-shadow:0 4px 12px rgba(26,158,117,.1);transform:translateY(-1px)}
-.person-card:hover::before{opacity:1}
-.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;color:#fff}
-.av.ot{background:linear-gradient(135deg,#0a5c48,#1a9e75)}
-.av.speech{background:linear-gradient(135deg,#1e40af,#3b82f6)}
-.av.lead{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
-.person-info{flex:1;min-width:0}
-.person-name{font-size:13px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.person-role{font-size:11px;color:#64748b;margin-top:1px}
-.arrow{font-size:14px;color:#94a3b8;flex-shrink:0}
-.footer{text-align:center;padding:24px;font-size:11px;color:#94a3b8}
+body{font-family:'Sora',sans-serif;background:#0d1b2a;min-height:100vh;display:flex;align-items:center;justify-content:center}
+
+/* PIN SCREEN */
+.pin-screen{width:100%;max-width:380px;padding:40px 24px;text-align:center}
+.pin-logo{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#0a5c48,#1aa382);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Instrument Serif',serif;font-size:24px;color:#fff}
+.pin-title{font-family:'Instrument Serif',serif;font-size:28px;color:#fff;margin-bottom:6px}
+.pin-sub{font-size:13px;color:#64748b;margin-bottom:32px}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:24px}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:#1e2d3d;border:2px solid #334155;transition:all .2s}
+.pin-dot.filled{background:#1aa382;border-color:#1aa382}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto 16px}
+.pin-btn{padding:18px;background:#1e2d3d;border:1px solid #334155;border-radius:12px;font-family:'Sora',sans-serif;font-size:20px;font-weight:500;color:#fff;cursor:pointer;transition:all .15s}
+.pin-btn:hover{background:#253545;border-color:#1aa382}
+.pin-btn:active{transform:scale(.95)}
+.pin-clear{width:100%;max-width:240px;margin:0 auto;padding:14px;background:transparent;border:1px solid #334155;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;color:#64748b;cursor:pointer}
+.pin-error{color:#e11d48;font-size:13px;margin-top:12px;min-height:20px}
+
+/* DASHBOARD */
+.dashboard{display:none;width:100%;max-width:480px;min-height:100vh;background:#f0f4f8;flex-direction:column}
+.dashboard.visible{display:flex}
+
+/* Header */
+.hdr{background:linear-gradient(160deg,#0d1b2a 0%,#1a3a5c 60%,#0a5c48 100%);padding:24px 20px 20px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(26,163,130,.08)}
+.hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1aa382,#0a5c48);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:18px;color:#fff;flex-shrink:0}
+.hdr-name{font-family:'Instrument Serif',serif;font-size:24px;color:#fff;line-height:1;margin-bottom:4px}
+.hdr-meta{font-size:12px;color:rgba(255,255,255,.5)}
+.hdr-meta span{color:rgba(255,255,255,.8);font-weight:500}
+.live-dot{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.5);align-self:flex-start;padding-top:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:#1aa382;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Search bar */
+.search-bar{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.search-bar-dot{width:8px;height:8px;border-radius:50%;background:#1aa382}
+.search-bar-text{font-size:13px;color:rgba(255,255,255,.4)}
+
+/* Tabs */
+.tabs{display:flex;background:#fff;border-bottom:1px solid #e2e8f0}
+.tab{flex:1;padding:14px;text-align:center;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab.active{color:#0a5c48;border-bottom-color:#1aa382}
+
+/* Phase bar */
+.phases{display:flex;padding:10px 16px;gap:0;background:#f8fafc;border-bottom:1px solid #e2e8f0;overflow-x:auto;scrollbar-width:none}
+.phases::-webkit-scrollbar{display:none}
+.phase{display:flex;align-items:center;gap:5px;font-size:10px;color:#94a3b8;white-space:nowrap;padding-right:12px}
+.phase-dot{width:7px;height:7px;border-radius:50%;background:#1aa382}
+.phase-dot.dim{background:#cbd5e1}
+.phase-sep{color:#cbd5e1;font-size:10px;padding-right:12px}
+
+/* Content */
+.content{flex:1;overflow-y:auto}
+.view{display:none;padding-bottom:24px}
+.view.active{display:block}
+
+/* Section label */
+.sec-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;padding:16px 16px 8px;display:flex;justify-content:space-between;align-items:center}
+.sec-label span{font-size:11px;color:#64748b;font-weight:400;letter-spacing:0;text-transform:none}
+
+/* Snapshot grid */
+.snap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.snap-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;transition:transform .15s,box-shadow .15s}
+.snap-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
+.snap-icon{font-size:18px;margin-bottom:8px}
+.snap-val{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1;margin-bottom:3px}
+.snap-val.teal{color:#0a5c48}
+.snap-val.orange{color:#d97706}
+.snap-lbl{font-size:11px;color:#64748b}
+.snap-sub{font-size:10px;font-weight:600;color:#1aa382;margin-top:3px}
+.snap-soon{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8;margin-top:6px;padding:3px 8px;background:#f1f5f9;border-radius:20px}
+.tap-detail{font-size:9px;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+
+/* Service breakdown */
+.service-box{margin:12px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:14px 16px}
+.service-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;margin-bottom:10px}
+.service-items{display:flex;flex-wrap:wrap;gap:6px}
+.service-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#475569}
+.service-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.service-pct{font-weight:600}
+
+/* Billable Hours */
+.bill-box{margin:12px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden}
+.bill-hdr{padding:14px 16px 0;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8}
+
+/* Gas Gauge */
+.gauge-wrap{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-end}
+.gauge-svg-wrap{position:relative;flex-shrink:0}
+.gauge-center{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);text-align:center;width:120px}
+.gauge-hrs{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1}
+.gauge-lbl{font-size:10px;color:#94a3b8;margin-top:2px}
+.gauge-status{font-size:11px;font-weight:600;color:#1aa382;margin-top:3px}
+
+/* Tier markers */
+.tier-markers{display:flex;flex-direction:column;gap:4px;padding-bottom:8px}
+.tier-mark{display:flex;align-items:center;gap:6px;font-size:10px;color:#64748b}
+.tier-line{width:16px;height:2px;border-radius:1px}
+
+/* Pace info */
+.pace-row{display:flex;justify-content:space-between;padding:8px 16px 12px;font-size:11px}
+.pace-left{color:#1aa382;font-weight:600}
+.pace-right{color:#64748b}
+
+/* Tier boxes */
+.tier-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px}
+.tier-box{border:1px solid #e2e8f0;border-radius:10px;padding:12px 8px;text-align:center}
+.tier-box-val{font-family:'Instrument Serif',serif;font-size:20px;color:#0f172a;line-height:1}
+.tier-box-val.teal{color:#0a5c48}
+.tier-box-lbl{font-size:10px;color:#64748b;margin-top:3px}
+
+/* Earnings calc */
+.earn-card{margin:8px 16px 0;background:#e8f7f3;border:1px solid #c2eadf;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.earn-left{display:flex;align-items:center;gap:10px}
+.earn-icon{font-size:20px}
+.earn-title{font-size:13px;font-weight:600;color:#0a5c48}
+.earn-sub{font-size:11px;color:#64748b;margin-top:2px}
+.earn-arrow{font-size:16px;color:#1aa382}
+
+/* Goals */
+.goals-card{margin:8px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden}
+.goals-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.goals-hdr-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#0f172a}
+.goals-icon{font-size:18px}
+.goals-arrow{font-size:12px;color:#94a3b8}
+
+/* Details expand */
+.details-btn{width:calc(100% - 32px);margin:8px 16px 0;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
+.details-btn:hover{background:#e8f7f3;color:#0a5c48}
+.detail-panel{display:none;margin:0 16px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:8px}
+.detail-panel.open{display:block}
+.detail-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:13px}
+.detail-row:last-child{border:none}
+.dl{color:#64748b}
+.dv{font-weight:500;color:#0f172a}
+
+/* Resources */
+.resource-search{margin:12px 16px 0;position:relative}
+.resource-search input{width:100%;padding:12px 16px 12px 40px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;color:#0f172a;outline:none}
+.resource-search input:focus{border-color:#1aa382}
+.resource-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:14px}
+.resource-group{margin:10px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden}
+.resource-group-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid transparent;transition:border .15s}
+.resource-group-hdr.open{border-bottom-color:#f1f5f9}
+.resource-group-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#0f172a}
+.resource-group-icon{font-size:18px}
+.resource-group-arrow{font-size:11px;color:#94a3b8;transition:transform .2s}
+.resource-group-arrow.open{transform:rotate(180deg)}
+.resource-items{display:none}
+.resource-items.open{display:block}
+.resource-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #f8fafc;font-size:13px;color:#475569;cursor:pointer;transition:background .1s}
+.resource-item:last-child{border:none}
+.resource-item:hover{background:#f8fafc}
+.resource-item-arrow{color:#cbd5e1;font-size:12px;margin-left:auto}
+.resource-soon{font-size:10px;color:#94a3b8;background:#f1f5f9;padding:2px 7px;border-radius:10px;margin-left:auto}
+
+/* Loading */
+.loading-wrap{padding:40px 20px;text-align:center}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid #e2e8f0;border-top-color:#1aa382;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:#94a3b8}
+.error-wrap{margin:16px;padding:14px;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;font-size:13px;color:#e11d48}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <h1>Clinician Portal</h1>
-  <p>In Reach Therapy · Select your name to view your stats</p>
-</div>
-<div class="content">
 
-  <!-- OT Team -->
-  <div class="team-section">
-    <div class="team-label">OT Team</div>
-    <div class="card-grid">
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/amanda-martini" class="person-card" style="--accent:#0d7a5e">
-        <div class="av lead">AM</div>
-        <div class="person-info"><div class="person-name">Mandy Martini</div><div class="person-role">OT Lead</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/brittney-nelson" class="person-card" style="--accent:#1a9e75">
-        <div class="av ot">BN</div>
-        <div class="person-info"><div class="person-name">Brittney Nelson</div><div class="person-role">COTA · Coastal FT</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/jordan-goddard" class="person-card" style="--accent:#1a9e75">
-        <div class="av ot">JG</div>
-        <div class="person-info"><div class="person-name">Jordan Goddard</div><div class="person-role">COTA · Coastal FT</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/leslie-talarico" class="person-card" style="--accent:#1a9e75">
-        <div class="av ot">LT</div>
-        <div class="person-info"><div class="person-name">Leslie Talarico</div><div class="person-role">COTA · 60-day Period</div></div>
-        <div class="arrow">→</div>
-      </a>
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+  <div class="pin-logo">SC</div>
+  <div class="pin-title">Sarah Curl</div>
+  <div class="pin-sub">Enter your 4-digit PIN to access your dashboard</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinClear()" style="font-size:13px;color:#64748b">Clear</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinBack()" style="font-size:18px">⌫</button>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="avatar">SC</div>
+      <div style="flex:1">
+        <div class="hdr-name">Sarah Curl</div>
+        <div class="hdr-meta">FairShare Level: <span id="hdrTrack">Coastal PT</span> · <span id="hdrQtr">Q2 2026</span></div>
+      </div>
+      <div class="live-dot"><div class="dot"></div><span id="liveStatus">Live</span></div>
+    </div>
+    <div class="search-bar" onclick="alert('AI search — coming in Phase 3!')">
+      <div class="search-bar-dot"></div>
+      <span class="search-bar-text">What do you need help with?</span>
     </div>
   </div>
 
-  <!-- Speech Team -->
-  <div class="team-section">
-    <div class="team-label">Speech Team</div>
-    <div class="card-grid">
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/claire-leake" class="person-card" style="--accent:#1e40af">
-        <div class="av lead">CL</div>
-        <div class="person-info"><div class="person-name">Claire Leake</div><div class="person-role">SLP Lead</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/bethany-laratta" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">BL</div>
-        <div class="person-info"><div class="person-name">Bethany Laratta</div><div class="person-role">SLP · Willamette</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/callye-hansen" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">CH</div>
-        <div class="person-info"><div class="person-name">Callye Hansen</div><div class="person-role">SLP · Clackamas</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/jordyn-hemenway" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">JH</div>
-        <div class="person-info"><div class="person-name">Jordyn Hemenway</div><div class="person-role">SLP · Clackamas</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/briana-moroney" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">BM</div>
-        <div class="person-info"><div class="person-name">Briana Moroney</div><div class="person-role">SLP · Hood</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/sarah-curl" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">SC</div>
-        <div class="person-info"><div class="person-name">Sarah Curl</div><div class="person-role">SLP · Coastal PT</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/cherie-swain" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">CS</div>
-        <div class="person-info"><div class="person-name">Cherie Swain</div><div class="person-role">SLP · Coastal FT</div></div>
-        <div class="arrow">→</div>
-      </a>
-      <a href="https://alaynaweimer.github.io/IRT-Clinical-Dashboards/alyssa-angueira" class="person-card" style="--accent:#3b82f6">
-        <div class="av speech">AA</div>
-        <div class="person-info"><div class="person-name">Alyssa Angueira</div><div class="person-role">SLP-A · Willamette</div></div>
-        <div class="arrow">→</div>
-      </a>
-    </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('dashboard',this)">📊 Dashboard</div>
+    <div class="tab" onclick="switchTab('resources',this)">📁 Resources</div>
   </div>
 
+  <div class="phases">
+    <div class="phase"><div class="phase-dot"></div> Phase 1 — Live Stats</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div> Phase 2 — Service Mix</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div> Phase 3 — AI Search</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD VIEW -->
+    <div class="view active" id="view-dashboard">
+
+      <div id="loadingWrap" class="loading-wrap">
+        <div class="spinner"></div>
+        <div class="loading-txt">Loading your stats…</div>
+      </div>
+
+      <div id="mainContent" style="display:none">
+
+        <!-- SNAPSHOT -->
+        <div class="sec-label">Snapshot <span id="weekLabel"></span></div>
+        <div class="snap-grid">
+          <div class="snap-card">
+            <div class="snap-icon">📅</div>
+            <div class="snap-val teal" id="snapWkly">—</div>
+            <div class="snap-lbl">Weekly Schedule</div>
+            <div class="snap-sub" id="snapWklyLbl">hrs expected</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">💰</div>
+            <div class="snap-val teal" id="snapPay">—</div>
+            <div class="snap-lbl">Next Paycheck</div>
+            <div class="snap-sub" id="snapPayDays"></div>
+          </div>
+          <div class="snap-card" onclick="alert('Cancel rate breakdown — coming in Phase 2!')">
+            <div class="snap-icon">📊</div>
+            <div class="snap-val orange" id="snapCancel">—</div>
+            <div class="snap-lbl">Cancel Rate</div>
+            <div class="tap-detail">TAP FOR DETAILS</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">🎯</div>
+            <div class="snap-val" style="font-size:14px;color:#94a3b8;padding-top:4px">Coming Soon</div>
+            <div class="snap-lbl">Service Mix</div>
+            <div class="snap-soon">Phase 2</div>
+          </div>
+        </div>
+
+        <!-- SERVICE BREAKDOWN -->
+        <div class="service-box">
+          <div class="service-title">Service Breakdown</div>
+          <div class="service-items">
+            <div class="service-item"><div class="service-dot" style="background:#3b82f6"></div>Evaluations <span class="service-pct">—</span></div>
+            <div class="service-item"><div class="service-dot" style="background:#1aa382"></div>In-Person Tx <span class="service-pct">—</span></div>
+            <div class="service-item"><div class="service-dot" style="background:#8b5cf6"></div>Telehealth Tx <span class="service-pct">—</span></div>
+            <div class="service-item"><div class="service-dot" style="background:#f59e0b"></div>Caregiver Ed <span class="service-pct">—</span></div>
+            <div class="service-item"><div class="service-dot" style="background:#ef4444"></div>Telescreens <span class="service-pct">—</span></div>
+          </div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:8px">Live service mix coming in Phase 2</div>
+        </div>
+
+        <!-- BILLABLE HOURS -->
+        <div class="bill-box">
+          <div class="bill-hdr">Billable Hours</div>
+          <div class="gauge-wrap">
+            <!-- Gas Gauge SVG -->
+            <div class="gauge-svg-wrap">
+              <svg width="180" height="100" viewBox="0 0 180 100">
+                <!-- Background track -->
+                <path d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
+                <!-- Colored fill -->
+                <path id="gaugeFill" d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+                <!-- Needle -->
+                <line id="gaugeNeedle" x1="90" y1="90" x2="90" y2="30" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90, 90, 90)"/>
+                <circle cx="90" cy="90" r="5" fill="#0f172a"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-hrs" id="gaugeHrs">—</div>
+                <div class="gauge-lbl">billable hours</div>
+                <div class="gauge-status" id="gaugeStatus">—</div>
+              </div>
+            </div>
+            <!-- Tier markers -->
+            <div class="tier-markers">
+              <div class="tier-mark"><div class="tier-line" style="background:#ef4444"></div><span id="mMin">—</span></div>
+              <div class="tier-mark"><div class="tier-line" style="background:#f59e0b"></div>Minimum</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#1aa382"></div><span id="mT1">—</span></div>
+              <div class="tier-mark" style="margin-left:22px">Tier 1</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#0a5c48"></div><span id="mT2">—</span></div>
+            </div>
+          </div>
+
+          <div class="pace-row">
+            <span class="pace-left" id="paceLeft">—</span>
+            <span class="pace-right" id="paceRight">—</span>
+          </div>
+
+          <div class="tier-grid">
+            <div class="tier-box">
+              <div class="tier-box-val" id="tMin">—</div>
+              <div class="tier-box-lbl">hrs to Minimum</div>
+            </div>
+            <div class="tier-box">
+              <div class="tier-box-val teal" id="tT1">—</div>
+              <div class="tier-box-lbl">hrs to Tier 1</div>
+            </div>
+            <div class="tier-box">
+              <div class="tier-box-val" style="color:#8b5cf6" id="tT2">—</div>
+              <div class="tier-box-lbl">hrs to Tier 2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EARNINGS CALCULATOR -->
+        <div class="earn-card" onclick="alert('Earnings calculator — coming soon!')">
+          <div class="earn-left">
+            <div class="earn-icon">💵</div>
+            <div>
+              <div class="earn-title">Earnings Calculator</div>
+              <div class="earn-sub">How many hours do I need to earn my goal?</div>
+            </div>
+          </div>
+          <div class="earn-arrow">→</div>
+        </div>
+
+        <!-- PROFESSIONAL GOALS -->
+        <div class="goals-card">
+          <div class="goals-hdr" onclick="toggleGoals()">
+            <div class="goals-hdr-left"><span class="goals-icon">🎯</span> Professional Goals</div>
+            <div class="goals-arrow" id="goalsArrow">▼</div>
+          </div>
+          <div id="goalsBody" style="display:none;padding:12px 16px;font-size:13px;color:#64748b">
+            Professional goals tracking — coming soon!
+          </div>
+        </div>
+
+        <!-- DETAILS -->
+        <button class="details-btn" id="detBtn" onclick="toggleDetails()">📋 See full breakdown ▾</button>
+        <div class="detail-panel" id="detPanel">
+          <div class="detail-row"><span class="dl">QCHE Target (100%)</span><span class="dv" id="dQche">—</span></div>
+          <div class="detail-row"><span class="dl">QCompleted (w/ credits)</span><span class="dv" id="dComp">—</span></div>
+          <div class="detail-row"><span class="dl">PTO Credits</span><span class="dv" id="dPTO">—</span></div>
+          <div class="detail-row"><span class="dl">Holiday Credits</span><span class="dv" id="dHol">—</span></div>
+          <div class="detail-row"><span class="dl">Tier Status</span><span class="dv" id="dTier">—</span></div>
+          <div class="detail-row"><span class="dl">Estimated Bonus</span><span class="dv" id="dBonus">—</span></div>
+          <div class="detail-row"><span class="dl">Weeks Left in Quarter</span><span class="dv" id="dWeeks">—</span></div>
+          <div class="detail-row"><span class="dl">Last Synced</span><span class="dv" id="dSync">—</span></div>
+        </div>
+
+      </div>
+      <div id="errorWrap" class="error-wrap" style="display:none"></div>
+    </div>
+
+    <!-- RESOURCES VIEW -->
+    <div class="view" id="view-resources">
+      <div class="resource-search">
+        <span class="resource-search-icon">🔍</span>
+        <input type="text" placeholder="Search resources…" id="resourceSearch" oninput="filterResources()">
+      </div>
+
+      <div class="resource-group" data-group="hr">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left"><span class="resource-group-icon">📋</span> HR & Benefits</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <div class="resource-item" data-name="Employee Handbook">→ Employee Handbook <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Benefits Overview">→ Benefits Overview <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="PTO Policy">→ PTO Policy <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="FMLA Information">→ FMLA Information <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Workers Comp">→ Workers' Comp <span class="resource-soon">Coming Soon</span></div>
+        </div>
+      </div>
+
+      <div class="resource-group" data-group="fairshare">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left"><span class="resource-group-icon">💚</span> FairShare Initiative</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <div class="resource-item" data-name="FairShare Overview">→ FairShare Overview <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Pay Structure Guide">→ Pay Structure Guide <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Bonus Calculator">→ Bonus Calculator <span class="resource-soon">Coming Soon</span></div>
+        </div>
+      </div>
+
+      <div class="resource-group" data-group="clinical">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left"><span class="resource-group-icon">🩺</span> Clinical Processes</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <div class="resource-item" data-name="Clinical Guidelines">→ Clinical Guidelines <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Re-eval Process">→ Re-eval Process <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="TX Plan Updates">→ TX Plan Updates <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Caregiver Education">→ Caregiver Education <span class="resource-soon">Coming Soon</span></div>
+        </div>
+      </div>
+
+      <div class="resource-group" data-group="scheduling">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left"><span class="resource-group-icon">📅</span> Scheduling</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <div class="resource-item" data-name="My Schedule" onclick="alert('Scheduling link coming soon!')">→ My Scheduling Link <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="PracticeQ">→ PracticeQ <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Request Time Off">→ Request Time Off <span class="resource-soon">Coming Soon</span></div>
+        </div>
+      </div>
+
+      <div class="resource-group" data-group="billing">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left"><span class="resource-group-icon">💳</span> Billing & Docs</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <div class="resource-item" data-name="Billing Guidelines">→ Billing Guidelines <span class="resource-soon">Coming Soon</span></div>
+          <div class="resource-item" data-name="Documentation Templates">→ Documentation Templates <span class="resource-soon">Coming Soon</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 </div>
-<div class="footer">In Reach Therapy · Clinician Portal · Q2 2026</div>
+
+<script>
+var WEB_APP  = "https://script.google.com/macros/s/AKfycby-LrpdhWgpx4Xvn-mnVC2wTQKeibtHCtdcQqL2lKpzuPla0buSb-_dsSMCDiHgqA/exec";
+var MY_NAME  = "Sarah Curl";
+var MY_PIN   = "8485";
+var PAYROLL  = "Friday";
+
+// ── PIN ──────────────────────────────────────────────────
+var pinEntered = "";
+function pinPress(d) {
+  if (pinEntered.length >= 4) return;
+  pinEntered += d;
+  document.getElementById('d' + (pinEntered.length-1)).classList.add('filled');
+  if (pinEntered.length === 4) {
+    setTimeout(checkPin, 200);
+  }
+}
+function pinBack() {
+  if (!pinEntered.length) return;
+  pinEntered = pinEntered.slice(0,-1);
+  document.getElementById('d' + pinEntered.length).classList.remove('filled');
+}
+function pinClear() {
+  pinEntered = "";
+  for(var i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
+  document.getElementById('pinError').textContent = "";
+}
+function checkPin() {
+  if (pinEntered === MY_PIN) {
+    document.getElementById('pinScreen').style.display = 'none';
+    document.body.style.background = '#f0f4f8';
+    document.getElementById('dashboard').classList.add('visible');
+    loadData();
+  } else {
+    document.getElementById('pinError').textContent = "Incorrect PIN — try again";
+    pinClear();
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+// ── TOGGLES ──────────────────────────────────────────────
+function toggleDetails() {
+  var open = document.getElementById('detPanel').classList.toggle('open');
+  document.getElementById('detBtn').textContent = open ? '📋 Hide breakdown ▴' : '📋 See full breakdown ▾';
+}
+function toggleGoals() {
+  var b = document.getElementById('goalsBody');
+  var a = document.getElementById('goalsArrow');
+  var vis = b.style.display === 'block';
+  b.style.display = vis ? 'none' : 'block';
+  a.textContent = vis ? '▼' : '▲';
+}
+function toggleGroup(hdr) {
+  var items = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.resource-group-arrow');
+  var open  = items.classList.toggle('open');
+  hdr.classList.toggle('open', open);
+  arrow.classList.toggle('open', open);
+}
+function filterResources() {
+  var q = document.getElementById('resourceSearch').value.toLowerCase();
+  document.querySelectorAll('.resource-item').forEach(function(item) {
+    var name = item.getAttribute('data-name') || '';
+    item.style.display = name.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── NEXT PAY DATE ─────────────────────────────────────────
+function nextPayDate() {
+  var anchor = new Date(2026, 3, 17); // Apr 17 Friday
+  var today  = new Date();
+  while (anchor <= today) anchor.setDate(anchor.getDate() + 14);
+  return anchor;
+}
+
+// ── GAUGE ─────────────────────────────────────────────────
+function updateGauge(pct) {
+  var maxPct  = 120;
+  var angle   = Math.min(pct, maxPct) / maxPct * 180 - 90;
+  var rad     = angle * Math.PI / 180;
+  var cx = 90, cy = 90, len = 55;
+  var x2 = cx + len * Math.sin(angle * Math.PI / 180 + Math.PI/2 - Math.PI);
+  var y2 = cy - len * Math.cos(angle * Math.PI / 180 + Math.PI/2 - Math.PI);
+
+  // Rotate needle
+  document.getElementById('gaugeNeedle').setAttribute('transform',
+    'rotate(' + (angle) + ', 90, 90)');
+
+  // Fill arc
+  var totalLen = 220;
+  var fillLen  = Math.min(pct / maxPct, 1) * totalLen;
+  var color    = pct >= 101 ? '#0a5c48' : pct >= 97 ? '#1aa382' : pct >= 96 ? '#f59e0b' : '#ef4444';
+  var fill = document.getElementById('gaugeFill');
+  fill.setAttribute('stroke-dashoffset', (totalLen - fillLen).toString());
+  fill.setAttribute('stroke', color);
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render(d) {
+  var ch     = parseFloat(d.client_hrs || d.client_hours) || 0;
+  var qche   = parseFloat(d.qche_100 || d.qche_100pct)   || 0;
+  var qcomp  = parseFloat(d.qcompleted)                   || 0;
+  var pct    = qche > 0 ? ch / qche * 100 : 0;
+  var wkly   = parseFloat(d.weekly_hrs || d.weekly_hrs_exp) || 0;
+  var weeks  = parseFloat(d.weeks_left || d.weeks_remaining) || 0;
+  var bonus  = parseFloat(d.total_bonus || d.estimated_bonus) || 0;
+  var q96    = qche * 0.96;
+  var q97    = qche * 0.97;
+  var tier   = d.tier_status || d.tier || '';
+  var track  = d.track || 'Coastal PT';
+  var qtr    = d.current_quarter || d.quarter || 'Q2';
+  var year   = d.year || 2026;
+
+  document.getElementById('hdrTrack').textContent = track;
+  document.getElementById('hdrQtr').textContent   = qtr + ' ' + year;
+  document.getElementById('liveStatus').textContent = 'Live';
+
+  // Snapshot
+  document.getElementById('snapWkly').textContent = wkly;
+  var pay  = nextPayDate();
+  var days = Math.ceil((pay - new Date()) / 86400000);
+  document.getElementById('snapPay').textContent    = pay.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('snapPayDays').textContent = 'IN ' + days + ' DAYS';
+  document.getElementById('snapCancel').textContent  = '—';
+  document.getElementById('weekLabel').textContent   = 'Week ' + (14 - weeks) + ' of 13';
+
+  // Gauge
+  updateGauge(pct);
+  document.getElementById('gaugeHrs').textContent = ch;
+  document.getElementById('gaugeStatus').textContent =
+    pct >= 101 ? 'Tier 2 Bonus! 🏆' :
+    pct >= 97  ? 'Tier 1 Bonus ✅' :
+    pct >= 96  ? 'Minimum Met ✅' :
+    pct >= 80  ? 'On Track ⚡' : 'Behind 🔴';
+
+  // Tier markers
+  document.getElementById('mMin').textContent = Math.round(q96) + ' hrs';
+  document.getElementById('mT1').textContent  = Math.round(q97) + ' hrs';
+  document.getElementById('mT2').textContent  = Math.round(qche + 1) + ' hrs';
+
+  // Pace
+  var hrsToMin = Math.max(0, q96 - ch).toFixed(1);
+  var hrsToT1  = Math.max(0, q97 - ch).toFixed(1);
+  var hrsToT2  = Math.max(0, qche + 1 - ch).toFixed(1);
+  var wklyNeeded = weeks > 0 ? (parseFloat(hrsToT1) / weeks).toFixed(1) : 0;
+
+  document.getElementById('paceLeft').textContent  = pct >= 97 ? 'On Pace 🎯' : pct >= 96 ? 'Minimum Met' : 'Needs Focus';
+  document.getElementById('paceRight').textContent = weeks > 0 ? 'Need ' + wklyNeeded + 'hrs/wk for Tier 1' : '';
+  document.getElementById('tMin').textContent = hrsToMin;
+  document.getElementById('tT1').textContent  = hrsToT1;
+  document.getElementById('tT2').textContent  = hrsToT2;
+
+  // Details
+  document.getElementById('dQche').textContent  = qche + ' hrs';
+  document.getElementById('dComp').textContent  = qcomp + ' hrs';
+  document.getElementById('dPTO').textContent   = (parseFloat(d.pto_hrs || d.pto_hours) || 0) + ' hrs';
+  document.getElementById('dHol').textContent   = (parseFloat(d.holiday_hrs || d.holiday_hours) || 0) + ' hrs';
+  document.getElementById('dTier').textContent  = tier || '—';
+  document.getElementById('dBonus').textContent = bonus > 0 ? '$' + bonus.toLocaleString() : 'None yet';
+  document.getElementById('dWeeks').textContent = weeks + ' weeks';
+  document.getElementById('dSync').textContent  = d.last_updated || '—';
+
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('errorWrap').style.display   = 'block';
+  document.getElementById('errorWrap').textContent     = '⚠️ ' + msg;
+  document.getElementById('liveStatus').textContent    = 'Offline';
+}
+
+// ── LOAD DATA ─────────────────────────────────────────────
+function loadData() {
+  var cb   = 'irt_' + Math.floor(Math.random() * 1e9);
+  var done = false;
+
+  window[cb] = function(data) {
+    done = true;
+    delete window[cb];
+    var el = document.getElementById('_js');
+    if (el) el.parentNode.removeChild(el);
+    if (!data) { showError('Empty response'); return; }
+    if (data.error) { showError(data.error); return; }
+    var list  = data.clinicians || [];
+    var found = null;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].name === MY_NAME) { found = list[i]; break; }
+    }
+    if (found) render(found);
+    else showError('No data for ' + MY_NAME + ' — run buildSummary() in Apps Script');
+  };
+
+  var s    = document.createElement('script');
+  s.id     = '_js';
+  s.src    = WEB_APP + '?action=summary&callback=' + cb;
+  s.onerror = function() {
+    if (!done) { done=true; delete window[cb]; showError('Cannot reach Apps Script — check deployment'); }
+  };
+  document.body.appendChild(s);
+
+  setTimeout(function() {
+    if (!done) { done=true; delete window[cb]; showError('Timed out — redeploy Web App as Anyone'); }
+  }, 10000);
+}
+</script>
 </body>
 </html>
